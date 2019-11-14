@@ -4,6 +4,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -59,6 +60,18 @@ class MainActivity : AppCompatActivity() {
 
                 return "AsyncTask Done"
             }
+
+             override fun onPostExecute(result: String?) {
+                super.onPostExecute(result)
+                 try {
+                     val jsonObject = JSONObject(result)
+                     val weatherInfo = jsonObject.getString("weather")
+                     Log.i("Weather content: ", weatherInfo)
+                 } catch (e: Exception) {
+                     e.printStackTrace()
+                 }
+
+             }
         }
     }
 }
