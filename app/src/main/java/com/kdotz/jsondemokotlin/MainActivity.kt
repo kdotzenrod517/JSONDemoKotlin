@@ -4,6 +4,7 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStreamReader
@@ -21,7 +22,9 @@ class MainActivity : AppCompatActivity() {
         var result: String? = null
 
         try {
-            result = task.execute("https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22").get()
+            result =
+                task.execute("https://samples.openweathermap.org/data/2.5/weather?q=London,uk&appid=b6907d289e10d714a6e88b30761fae22")
+                    .get()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -61,17 +64,24 @@ class MainActivity : AppCompatActivity() {
                 return "AsyncTask Done"
             }
 
-             override fun onPostExecute(result: String?) {
+            override fun onPostExecute(result: String?) {
                 super.onPostExecute(result)
-                 try {
-                     val jsonObject = JSONObject(result)
-                     val weatherInfo = jsonObject.getString("weather")
-                     Log.i("Weather content: ", weatherInfo)
-                 } catch (e: Exception) {
-                     e.printStackTrace()
-                 }
+                try {
+                    val jsonObject = JSONObject(result)
+                    val weatherInfo = jsonObject.getString("weather")
+                    Log.i("Weather content: ", weatherInfo)
+                    val arr = JSONArray(weatherInfo)
+                    for (i in 0 until arr.length()) {
+                        val jsonPart = arr.getJSONObject(i)
+                        Log.i("main", jsonPart.getString("main"))
+                        Log.i("description", jsonPart.getString("description"))
+                    }
 
-             }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+            }
         }
     }
 }
